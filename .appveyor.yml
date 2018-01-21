@@ -6,12 +6,12 @@ os:
 
 platform:
   - x86
-  - x64
+#  - x64
 
 configuration:
-  - Debug
+#  - Debug
   - Release
-  - RelWithDebInfo
+#  - RelWithDebInfo
 
 init:
   - if platform==x64 (set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015_64) else (set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015)
@@ -44,5 +44,8 @@ deploy:
   prerelease: true
   on:
     branch: develop
+    platform: x86
+#    configuration: RelWithDebInfo
+    configuration: Release
 
 skip_tags: true
