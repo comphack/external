@@ -40,6 +40,12 @@ SET(CMAKE_MODULE_PATH
     ${COMP_MODULE_PATH}
 )
 
+IF(WIN32)
+    SET(CPACK_GENERATOR "ZIP")
+ELSE()
+    SET(CPACK_GENERATOR "TGZ;TBZ2")
+ENDIF()
+
 # Enable the CPack module for building installers.
 INCLUDE(CPack)
 
@@ -87,12 +93,6 @@ OPTION(BUILD_OPTIMIZED "Build an optimized release of the server." ON)
 
 # Include all build code for external projects.
 INCLUDE(${COMP_MODULE_PATH}/external.cmake)
-
-IF(WIN32)
-    SET(CPACK_GENERATOR "ZIP")
-ELSE()
-    SET(CPACK_GENERATOR "TGZ;TBZ2")
-ENDIF()
 
 #
 # Install for each external dependency.
