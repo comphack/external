@@ -147,6 +147,11 @@ ExternalProject_Get_Property(tinyxml2-ex INSTALL_DIR)
 INSTALL(DIRECTORY ${INSTALL_DIR}/lib DESTINATION tinyxml2)
 INSTALL(DIRECTORY ${INSTALL_DIR}/include DESTINATION tinyxml2)
 
+ExternalProject_Get_Property(googletest INSTALL_DIR)
+
+INSTALL(DIRECTORY ${INSTALL_DIR}/lib DESTINATION googletest)
+INSTALL(DIRECTORY ${INSTALL_DIR}/include DESTINATION googletest)
+
 ExternalProject_Get_Property(jsonbox-ex INSTALL_DIR)
 
 INSTALL(DIRECTORY ${INSTALL_DIR}/lib DESTINATION jsonbox)
