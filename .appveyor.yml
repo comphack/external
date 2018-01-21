@@ -1,0 +1,48 @@
+version: "{branch}-{build}"
+test: off
+
+os:
+  - Visual Studio 2015
+
+platform:
+  - x86
+  - x64
+
+configuration:
+  - Debug
+  - Release
+  - RelWithDebInfo
+
+init:
+  - if platform==x64 (set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015_64) else (set CMAKE_PREFIX_PATH=C:\Qt\5.7\msvc2015)
+  - if platform==x64 (set generator=Visual Studio 14 2015 Win64) else (set generator=Visual Studio 14 2015)
+  - if platform==x64 (set msplatform=x64) else (set msplatform=Win32)
+  - echo "Platform      = %platform%"
+  - echo "MS Platform   = %msplatform%"
+  - echo "Configuration = %configuration%"
+
+before_build:
+  - md build
+  - cd build
+
+build_script:
+  - cmake -DCMAKE_INSTALL_PREFIX="%appveyor_build_folder%\build\install" -DCMAKE_CUSTOM_CONFIGURATION_TYPES="%configuration%" -G"%generator%" ..
+  - cmake --build . --config %configuration% --target package
+
+artifacts:
+  - path: build\external-*.zip
+    name: external_installer
+
+deploy:
+  release: external-$(appveyor_build_number)
+  description: 'Development Build'
+  provider: GitHub
+  auth_token:
+    secure: /xJRd5oxBbWa7IDdzPFbollIUAc7uqashBu8crIATrv4iUJX//DvzrGSFCaDdFsj
+  artifact: external_installer
+  draft: false
+  prerelease: true
+  on:
+    branch: develop
+
+skip_tags: true
