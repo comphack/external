@@ -11,7 +11,7 @@ deploy:
   skip_cleanup: true
   api_key:
     secure: CdaO1tOo6qj8koBffEeD8epEZZ9dd8Idkm5MuZzlx4M0ek23i1aopXU8C5HyV5RBCNY66tf24ZYiHQDUTZye31nEvjI8cipqE4jupt7Rwyltps/h1ILVu2/8teoq/1ej05hTrUSOVWz3qFQaxUqkpjC/1u3rMH64RrPgW07a59TNzwjPtlj7fShkufLIDF7wymMwMjEd0GJVXZdGT/7NyN15btU7rvciWpAvCxdfoeeQnRaph+DeZ+DUAQ6dycZJmtSQ9V0eqtR8OFOpf8RSwGjdy0OLol2bu5/sRXH1h2UV4Tx3RgWpZiJOIvrWUekX36vvkIif4HMqx+xKK84pOouEaKyCmNjtyov36Vo5HQNtxccitedli84gGWdiFXB2wq5Gxy+ibGJn8ldHKY4gTDbYA+gBq+48AvKqfCpgbGSAEdbdk0Q8E/z67aYtNIyZgrPLNgVEbKquR8a9Ky6O3/upVuFaBNTKV8souKJTWirAxEBEE/bgxReJxJR9QY3Ti0+TTtd8ilA4+kLqV617gPePIounyxbi3s3MJVV/rtoZc0clL0e7HPNzk/0kiRewpUub4fVXL9bCeFnFNPIGLAzZAhh8fnBCD4txhhuGuJVG9cKGnhjMST2KBz+KIcjoozlIjQT7Lkpf7lVLxvXr679cl+dbo8+XdDtOClo2G3c=
-  file: build/external-*.tar.bz2
+  file: external-*.tar.bz2
   on:
     repo: comphack/external
     branch: develop
@@ -65,3 +65,5 @@ script:
   - mkdir -p build && cd build && cmake -DCMAKE_INSTALL_PREFIX="${ROOT_DIR}/build/install" -DBUILD_OPTIMIZED=OFF -G "${GENERATOR}" .. && cmake --build .
   - cmake --build . --target package
   - mv external-0.1.1-Linux.tar.bz2 external-${BUILD_NAME}.tar.bz2
+  - ls
+  - pwd
