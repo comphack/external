@@ -126,10 +126,6 @@ ExternalProject_Get_Property(physfs-lib INSTALL_DIR)
 INSTALL(DIRECTORY ${INSTALL_DIR}/lib DESTINATION physfs)
 INSTALL(DIRECTORY ${INSTALL_DIR}/include DESTINATION physfs)
 
-ExternalProject_Get_Property(sqrat INSTALL_DIR)
-
-INSTALL(DIRECTORY ${INSTALL_DIR}/include DESTINATION sqrat)
-
 ExternalProject_Get_Property(civet INSTALL_DIR)
 
 INSTALL(DIRECTORY ${INSTALL_DIR}/lib DESTINATION civet)
