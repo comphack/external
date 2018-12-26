@@ -44,12 +44,8 @@ deploy:
   prerelease: true
   on:
     branch: develop
-    platform: x86
-    configuration: RelWithDebInfo
-#    configuration: Release
-  on:
-    branch: develop
     platform: x64
+    platform: x86
     configuration: RelWithDebInfo
 #    configuration: Release
 
