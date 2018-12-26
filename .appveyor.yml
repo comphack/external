@@ -5,7 +5,7 @@ os:
   - Visual Studio 2015
 
 platform:
-#  - x86
+  - x86
   - x64
 
 configuration:
@@ -44,7 +44,11 @@ deploy:
   prerelease: true
   on:
     branch: develop
-#    platform: x86
+    platform: x86
+    configuration: RelWithDebInfo
+#    configuration: Release
+  on:
+    branch: develop
     platform: x64
     configuration: RelWithDebInfo
 #    configuration: Release
