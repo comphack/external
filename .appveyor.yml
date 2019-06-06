@@ -26,8 +26,8 @@ before_build:
   - cd build
 
 build_script:
-  - appveyor DownloadFile https://slproweb.com/download/Win64OpenSSL-1_1_1c.msi -FileName Win64OpenSSL.msi
-  - start /wait msiexec /i Win64OpenSSL.msi /qn
+  - if %platform%==x64 (appveyor DownloadFile https://slproweb.com/download/Win64OpenSSL-1_1_1c.msi -FileName WinOpenSSL.msi) else (appveyor DownloadFile https://slproweb.com/download/Win32OpenSSL-1_1_1c.msi -FileName WinOpenSSL.msi)
+  - start /wait msiexec /i WinOpenSSL.msi /qn
   - cmake -DCMAKE_INSTALL_PREFIX="%appveyor_build_folder%\build\install" -DCMAKE_CUSTOM_CONFIGURATION_TYPES="%configuration%" -DUSE_SYSTEM_OPENSSL=ON -G"%generator%" ..
   - cmake --build . --config %configuration% --target package
 
