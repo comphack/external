@@ -46,4 +46,4 @@ cmake -DCMAKE_INSTALL_PREFIX="${ROOT_DIR}/build/install" -DBUILD_OPTIMIZED=OFF -
 cmake --build .
 cmake --build . --target package
 
-mv external-0.1.1-Linux.tar.bz2 external-0.1.1-${PLATFORM}.tar.bz2
+mv external-0.1.1-Linux.tar.bz2 "${ROOT_DIR}/external-0.1.1-${PLATFORM}.tar.bz2"
