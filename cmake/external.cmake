@@ -756,8 +756,8 @@ ELSEIF(GIT_DEPENDENCIES)
     )
 ELSE()
     SET(GOOGLETEST_URL
-        URL https://github.com/comphack/googletest/archive/comp_hack-20180425.zip
-        URL_HASH SHA1=40b8e97ef07d300539bd2a5d6b1c1cfcd92deb7b
+        URL https://github.com/comphack/googletest/archive/comp_hack-20200318.zip
+        URL_HASH SHA1=5a87ec2b8f58ecc187dcf899b1457dfbc873d6fd
     )
 ENDIF()
 
