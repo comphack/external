@@ -1,33 +1,17 @@
-sudo: required
-dist: trusty
 language: cpp
 
 cache:
   directories:
     - cache
 
-deploy:
-  provider: releases
-  api_key:
-    secure: CdaO1tOo6qj8koBffEeD8epEZZ9dd8Idkm5MuZzlx4M0ek23i1aopXU8C5HyV5RBCNY66tf24ZYiHQDUTZye31nEvjI8cipqE4jupt7Rwyltps/h1ILVu2/8teoq/1ej05hTrUSOVWz3qFQaxUqkpjC/1u3rMH64RrPgW07a59TNzwjPtlj7fShkufLIDF7wymMwMjEd0GJVXZdGT/7NyN15btU7rvciWpAvCxdfoeeQnRaph+DeZ+DUAQ6dycZJmtSQ9V0eqtR8OFOpf8RSwGjdy0OLol2bu5/sRXH1h2UV4Tx3RgWpZiJOIvrWUekX36vvkIif4HMqx+xKK84pOouEaKyCmNjtyov36Vo5HQNtxccitedli84gGWdiFXB2wq5Gxy+ibGJn8ldHKY4gTDbYA+gBq+48AvKqfCpgbGSAEdbdk0Q8E/z67aYtNIyZgrPLNgVEbKquR8a9Ky6O3/upVuFaBNTKV8souKJTWirAxEBEE/bgxReJxJR9QY3Ti0+TTtd8ilA4+kLqV617gPePIounyxbi3s3MJVV/rtoZc0clL0e7HPNzk/0kiRewpUub4fVXL9bCeFnFNPIGLAzZAhh8fnBCD4txhhuGuJVG9cKGnhjMST2KBz+KIcjoozlIjQT7Lkpf7lVLxvXr679cl+dbo8+XdDtOClo2G3c=
-  skip_cleanup: true
-  file_glob: true
-  file: external*.tar.bz2
-  on:
-    repo: comphack/external
-    branch: develop
-
-addons:
-  mariadb: '10.1'
-
-matrix:
+jobs:
   include:
-    - compiler: clang
-      env:
-        - COMPILER_CC=clang
-        - COMPILER_CXX=clang++
-        - BUILD_NAME=clang
-    - compiler: gcc
+    - stage: "Build"
+      name: "Build (Linux GCC)"
+      os: linux
+      dist: trusty
+      sudo: required
+      compiler: gcc
       addons:
         apt:
           sources:
@@ -37,32 +21,73 @@ matrix:
       env:
         - COMPILER_CC=gcc-5
         - COMPILER_CXX=g++-5
-        - BUILD_NAME=gcc5
+        - PLATFORM=gcc5
+      script: ci/linux-build.sh
+      deploy:
+        provider: releases
+        api_key:
+          secure: CdaO1tOo6qj8koBffEeD8epEZZ9dd8Idkm5MuZzlx4M0ek23i1aopXU8C5HyV5RBCNY66tf24ZYiHQDUTZye31nEvjI8cipqE4jupt7Rwyltps/h1ILVu2/8teoq/1ej05hTrUSOVWz3qFQaxUqkpjC/1u3rMH64RrPgW07a59TNzwjPtlj7fShkufLIDF7wymMwMjEd0GJVXZdGT/7NyN15btU7rvciWpAvCxdfoeeQnRaph+DeZ+DUAQ6dycZJmtSQ9V0eqtR8OFOpf8RSwGjdy0OLol2bu5/sRXH1h2UV4Tx3RgWpZiJOIvrWUekX36vvkIif4HMqx+xKK84pOouEaKyCmNjtyov36Vo5HQNtxccitedli84gGWdiFXB2wq5Gxy+ibGJn8ldHKY4gTDbYA+gBq+48AvKqfCpgbGSAEdbdk0Q8E/z67aYtNIyZgrPLNgVEbKquR8a9Ky6O3/upVuFaBNTKV8souKJTWirAxEBEE/bgxReJxJR9QY3Ti0+TTtd8ilA4+kLqV617gPePIounyxbi3s3MJVV/rtoZc0clL0e7HPNzk/0kiRewpUub4fVXL9bCeFnFNPIGLAzZAhh8fnBCD4txhhuGuJVG9cKGnhjMST2KBz+KIcjoozlIjQT7Lkpf7lVLxvXr679cl+dbo8+XdDtOClo2G3c=
+        skip_cleanup: true
+        file_glob: true
+        file: external*.tar.bz2
+        on:
+          repo: comphack/external
+          branch: develop
 
-before_install:
-  - export ROOT_DIR=`pwd`
-  - export CACHE_DIR=`pwd`/cache
-  - cd ${CACHE_DIR}
-  - if [ ! -f cmake-3.6.1-Linux-x86_64.tar.gz ]; then wget -q https://cmake.org/files/v3.6/cmake-3.6.1-Linux-x86_64.tar.gz; fi
-  - if [ ! -f clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz ]; then wget -q http://llvm.org/releases/3.8.0/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz; fi
-  - cd ${ROOT_DIR}
-  - sudo apt-get update -q
-  - sudo apt-get install libssl-dev libsqlite3-dev sqlite3 libuv-dev unzip -y
-  - cd /opt
-  - sudo tar xf $CACHE_DIR/cmake-3.6.1-Linux-x86_64.tar.gz
-  - export PATH="/opt/cmake-3.6.1-Linux-x86_64/bin:${PATH}"
-  - export LD_LIBRARY_PATH="/opt/cmake-3.6.1-Linux-x86_64/lib"
-  - cd ${ROOT_DIR}
-  - if [ "$CXX" == "clang++" ]; then cd /opt; fi
-  - if [ "$CXX" == "clang++" ]; then sudo tar xf $CACHE_DIR/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz; fi
-  - if [ "$CXX" == "clang++" ]; then export PATH="/opt/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04/bin:${PATH}"; fi
-  - if [ "$CXX" == "clang++" ]; then export LD_LIBRARY_PATH="/opt/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04/lib:${LD_LIBRARY_PATH}"; fi
-  - if [ "$CXX" == "clang++" ]; then cd ${ROOT_DIR}; fi
-  - export CC="${COMPILER_CC}"
-  - export CXX="${COMPILER_CXX}"
-  - export GENERATOR="Unix Makefiles"
+    - stage: "Build"
+      name: "Build (Linux Clang)"
+      os: linux
+      dist: trusty
+      sudo: required
+      compiler: clang
+      env:
+        - PLATFORM=clang
+        - COMPILER_CC=clang
+        - COMPILER_CXX=clang++
+      script: ci/linux-build.sh
+      deploy:
+        provider: releases
+        api_key:
+          secure: CdaO1tOo6qj8koBffEeD8epEZZ9dd8Idkm5MuZzlx4M0ek23i1aopXU8C5HyV5RBCNY66tf24ZYiHQDUTZye31nEvjI8cipqE4jupt7Rwyltps/h1ILVu2/8teoq/1ej05hTrUSOVWz3qFQaxUqkpjC/1u3rMH64RrPgW07a59TNzwjPtlj7fShkufLIDF7wymMwMjEd0GJVXZdGT/7NyN15btU7rvciWpAvCxdfoeeQnRaph+DeZ+DUAQ6dycZJmtSQ9V0eqtR8OFOpf8RSwGjdy0OLol2bu5/sRXH1h2UV4Tx3RgWpZiJOIvrWUekX36vvkIif4HMqx+xKK84pOouEaKyCmNjtyov36Vo5HQNtxccitedli84gGWdiFXB2wq5Gxy+ibGJn8ldHKY4gTDbYA+gBq+48AvKqfCpgbGSAEdbdk0Q8E/z67aYtNIyZgrPLNgVEbKquR8a9Ky6O3/upVuFaBNTKV8souKJTWirAxEBEE/bgxReJxJR9QY3Ti0+TTtd8ilA4+kLqV617gPePIounyxbi3s3MJVV/rtoZc0clL0e7HPNzk/0kiRewpUub4fVXL9bCeFnFNPIGLAzZAhh8fnBCD4txhhuGuJVG9cKGnhjMST2KBz+KIcjoozlIjQT7Lkpf7lVLxvXr679cl+dbo8+XdDtOClo2G3c=
+        skip_cleanup: true
+        file_glob: true
+        file: external*.tar.bz2
+        on:
+          repo: comphack/external
+          branch: develop
 
-script:
-  - mkdir -p build && cd build && cmake -DCMAKE_INSTALL_PREFIX="${ROOT_DIR}/build/install" -DBUILD_OPTIMIZED=OFF -G "${GENERATOR}" .. && cmake --build .
-  - cmake --build . --target package
-  - mv external-0.1.1-Linux.tar.bz2 external-${BUILD_NAME}.tar.bz2
+    - stage: "Build"
+      name: "Windows (VS2017 32-bit)"
+      os: windows
+      env:
+        - PLATFORM=win32
+        - QT5_BASE_DIR=C:/Qt/5.12.3/msvc2017
+      script: ci/windows-build.sh
+      deploy:
+        provider: releases
+        api_key:
+          secure: CdaO1tOo6qj8koBffEeD8epEZZ9dd8Idkm5MuZzlx4M0ek23i1aopXU8C5HyV5RBCNY66tf24ZYiHQDUTZye31nEvjI8cipqE4jupt7Rwyltps/h1ILVu2/8teoq/1ej05hTrUSOVWz3qFQaxUqkpjC/1u3rMH64RrPgW07a59TNzwjPtlj7fShkufLIDF7wymMwMjEd0GJVXZdGT/7NyN15btU7rvciWpAvCxdfoeeQnRaph+DeZ+DUAQ6dycZJmtSQ9V0eqtR8OFOpf8RSwGjdy0OLol2bu5/sRXH1h2UV4Tx3RgWpZiJOIvrWUekX36vvkIif4HMqx+xKK84pOouEaKyCmNjtyov36Vo5HQNtxccitedli84gGWdiFXB2wq5Gxy+ibGJn8ldHKY4gTDbYA+gBq+48AvKqfCpgbGSAEdbdk0Q8E/z67aYtNIyZgrPLNgVEbKquR8a9Ky6O3/upVuFaBNTKV8souKJTWirAxEBEE/bgxReJxJR9QY3Ti0+TTtd8ilA4+kLqV617gPePIounyxbi3s3MJVV/rtoZc0clL0e7HPNzk/0kiRewpUub4fVXL9bCeFnFNPIGLAzZAhh8fnBCD4txhhuGuJVG9cKGnhjMST2KBz+KIcjoozlIjQT7Lkpf7lVLxvXr679cl+dbo8+XdDtOClo2G3c=
+        skip_cleanup: true
+        file_glob: true
+        file: external*.zip
+        on:
+          repo: comphack/external
+          branch: develop
+
+    - stage: "Build"
+      name: "Windows (VS2017 64-bit)"
+      os: windows
+      env:
+        - PLATFORM=win64
+        - QT5_BASE_DIR=C:/Qt/5.12.3/msvc2017_64
+      script: ci/windows-build.sh
+      deploy:
+        provider: releases
+        api_key:
+          secure: CdaO1tOo6qj8koBffEeD8epEZZ9dd8Idkm5MuZzlx4M0ek23i1aopXU8C5HyV5RBCNY66tf24ZYiHQDUTZye31nEvjI8cipqE4jupt7Rwyltps/h1ILVu2/8teoq/1ej05hTrUSOVWz3qFQaxUqkpjC/1u3rMH64RrPgW07a59TNzwjPtlj7fShkufLIDF7wymMwMjEd0GJVXZdGT/7NyN15btU7rvciWpAvCxdfoeeQnRaph+DeZ+DUAQ6dycZJmtSQ9V0eqtR8OFOpf8RSwGjdy0OLol2bu5/sRXH1h2UV4Tx3RgWpZiJOIvrWUekX36vvkIif4HMqx+xKK84pOouEaKyCmNjtyov36Vo5HQNtxccitedli84gGWdiFXB2wq5Gxy+ibGJn8ldHKY4gTDbYA+gBq+48AvKqfCpgbGSAEdbdk0Q8E/z67aYtNIyZgrPLNgVEbKquR8a9Ky6O3/upVuFaBNTKV8souKJTWirAxEBEE/bgxReJxJR9QY3Ti0+TTtd8ilA4+kLqV617gPePIounyxbi3s3MJVV/rtoZc0clL0e7HPNzk/0kiRewpUub4fVXL9bCeFnFNPIGLAzZAhh8fnBCD4txhhuGuJVG9cKGnhjMST2KBz+KIcjoozlIjQT7Lkpf7lVLxvXr679cl+dbo8+XdDtOClo2G3c=
+        skip_cleanup: true
+        file_glob: true
+        file: external*.zip
+        on:
+          repo: comphack/external
+          branch: develop
