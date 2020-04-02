@@ -492,8 +492,8 @@ ELSEIF(GIT_DEPENDENCIES)
     )
 ELSE()
     SET(CIVET_URL
-        URL https://github.com/comphack/civetweb/archive/comp_hack-20190603.zip
-        URL_HASH SHA1=f08e6cdff7540d7fe71d61c411535b344a648801
+        URL https://github.com/comphack/civetweb/archive/comp_hack-20200402.zip
+        URL_HASH SHA1=d032dbe54a370aa255066b6920b96dced9a10356
     )
 ENDIF()
 
@@ -574,8 +574,8 @@ ELSEIF(GIT_DEPENDENCIES)
     )
 ELSE()
     SET(SQUIRREL_URL
-        URL https://github.com/comphack/squirrel3/archive/comp_hack-20180424.zip
-        URL_HASH SHA1=e93edb4d4d6efdc45afa6f51e36d1971934e676d
+        URL https://github.com/comphack/squirrel3/archive/comp_hack-20200402.zip
+        URL_HASH SHA1=d14c0d79738ce773edfcb2a67cdfd699cf665d3a
     )
 ENDIF()
 
@@ -654,8 +654,8 @@ ELSEIF(GIT_DEPENDENCIES)
     )
 ELSE()
     SET(ASIO_URL
-        URL https://github.com/comphack/asio/archive/comp_hack-20161214.zip
-        URL_HASH SHA1=454d619fca0f4bf68fb5b346a05e905e1054ea01
+        URL https://github.com/comphack/asio/archive/comp_hack-20200402.zip
+        URL_HASH SHA1=26d1af5e88ae4e0e93f64d614cd5f59ba13a024d
     )
 ENDIF()
 
