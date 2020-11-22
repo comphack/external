@@ -1,0 +1,144 @@
+name: C/C++ CI
+
+on: [push, pull_request]
+
+jobs:
+  linux-gcc-build:
+    name: Ubuntu Linux (GCC)
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Build Project
+      env:
+        CC: gcc
+        CXX: g++
+        PLATFORM: linux
+        COMPILER: gcc
+        GENERATOR: Unix Makefiles
+      run: ci/linux-build.sh
+    - name: Get Release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.2
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload Release Asset
+      id: upload_release_asset
+      uses: actions/upload-release-asset@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: external-linux-gcc.tar.bz2
+        asset_name: external-linux-gcc.tar.bz2
+        asset_content_type: application/x-gtar
+
+  linux-clang-build:
+    name: Ubuntu Linux (Clang)
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Build Project
+      env:
+        CC: clang
+        CXX: clang++
+        PLATFORM: linux
+        COMPILER: clang
+        GENERATOR: Ninja
+      run: ci/linux-build.sh
+    - name: Get Release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.2
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload Release Asset
+      id: upload_release_asset
+      uses: actions/upload-release-asset@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: external-linux-clang.tar.bz2
+        asset_name: external-linux-clang.tar.bz2
+        asset_content_type: application/x-gtar
+
+  win32-msvc2017-build:
+    name: Windows 32-bit (MSVC 2017)
+    runs-on: windows-2016
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Build Project
+      env:
+        PLATFORM: win32
+        COMPILER: msvc2017
+        MSPLATFORM: Win32
+        GENERATOR: Visual Studio 15 2017
+        CONFIGURATION: RelWithDebInfo
+        OPENSSL_ROOT_DIR: C:/Program Files (x86)/OpenSSL-Win32
+        OPENSSL_URL: https://github.com/comphack/external/releases/download/external-25/Win32OpenSSL-1_1_1h.msi
+      run: .\ci\windows-build.ps1
+    - name: Get Release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.2
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload Release Asset
+      id: upload_release_asset
+      uses: actions/upload-release-asset@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: external-win32-msvc2017.zip
+        asset_name: external-win32-msvc2017.zip
+        asset_content_type: application/x-zip
+
+  win64-msvc2017-build:
+    name: Windows 64-bit (MSVC 2017)
+    runs-on: windows-2016
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Build Project
+      env:
+        PLATFORM: win64
+        COMPILER: msvc2017
+        MSPLATFORM: x64
+        GENERATOR: Visual Studio 15 2017 Win64
+        CONFIGURATION: RelWithDebInfo
+        OPENSSL_ROOT_DIR: C:/Program Files/OpenSSL-Win64
+        OPENSSL_URL: https://github.com/comphack/external/releases/download/external-25/Win64OpenSSL-1_1_1h.msi
+      run: .\ci\windows-build.ps1
+    - name: Get Release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.2
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload Release Asset
+      id: upload_release_asset
+      uses: actions/upload-release-asset@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: external-win64-msvc2017.zip
+        asset_name: external-win64-msvc2017.zip
+        asset_content_type: application/x-zip
